@@ -1,29 +1,82 @@
 <?php
 
     require "../private/autoload.php";
+    $Error = "";
+    $email = "";
+    $name  = "";
 
     if($_SERVER['REQUEST_METHOD'] == "POST")
     {
         print_r($_POST);
 
+        //validating user input by white listing: regural expression 
         $name = $_POST['full_name'];
-        $email = $_POST['email'];
-        //White listing with regular expresions
-        if (!preg_match("/^[\w\-]+@[\w\-]+.[\w\-]+$/", $email))
+        if (!preg_match("/^[a-zA-Z ]+$/", $name))
         {
-            $Error = "Please enter a valid Email";
+            $Error = "Please enter a valid Name!";
         }
 
-        $password = $_POST['password'];
+        //Sanitization
+        $name = esc($name);
+
+        $email = $_POST['email'];
+        //White listing with regular expression
+        if (!preg_match("/^[\w\-]+@[\w\-]+.[\w\-]+$/", $email))
+        {
+            $Error = "Please enter a valid Email!";
+        }
+        //Sanitization for Password
+        $password = esc($_POST['password']);
+
+        //to make records different
         $date = date("Y-m-d H:i:s");
         $url_address = get_random_string(60);
 
-        $query = "insert into users (url_address,name,password, email, date) values ('$url_address','$name','$password', '$email', '$date')";
-        mysqli_query($connection, $query);
+        //checking the email is already registered or not
+            $arr = false;
+            $arr['email'] = $email;
+
+            $query = "select * from users where email = :email limit 1";
+            $stm = $connection->prepare($query);
+            $check = $stm->execute($arr);
+
+            if($check)
+            {
+                $data = $stm->fetchAll(PDO::FETCH_OBJ);
+                if(is_array($data) && count($data) > 0){
+
+                    $Error = "Email already exists! Try to Login in or use another Email!";
+                }
+            }
+
+        if($Error == "")
+        {
+            // ----- by using a prepared statement ------
+            // to use this parametrized part uncomment the PDO connection part 
+            // in database connection php page
+
+            $arr['url_address'] = $url_address;
+            $arr['name'] = $name;
+            $arr['password'] = $password;
+            $arr['email'] = $email;
+            $arr['date'] = $date;
+
+            $query = "insert into users (url_address,name,password, email, date) values (:url_address,:name,:password,:email,:date)";
+            $stm = $connection->prepare($query);
+            $stm->execute($arr);
+
+            // ----------- // ------------ // -----------
+            // --- without prepared statement
+            // -- before using the following code uncomment the connection to 
+            // database at database.php page and comment the PDO section
+
+            // $query = "insert into users (url_address,name,password, email, date) values ('$url_address','$name','$password', '$email', '$date')";
+            // mysqli_query($connection, $query);
+
+            header("Location: login.php");
+            die;
+        }
     }
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -65,11 +118,15 @@
                 }
             ?> </div>
             <div id="title">Signup</div>
-            <input id="textbox" type="text" name="full_name" required><br><br>
-            <input id="textbox" type="email" name="email" required><br><br>
+            <input id="textbox" type="text" name="full_name" value="<?=$name?>" required><br><br>
+            <input id="textbox" type="email" name="email" value="<?=$email?>" required><br><br>
             <input id="textbox" type="password" name="password" required><br><br>
             
-            <input type="submit" value="Signup"><br><br>
+            <input type="submit" value="Signup">
+            <div style="float:right">
+                <a href="login.php">Login instead</a>
+            </div><br><br>
+            
         </form>
     </body>
 </html>
