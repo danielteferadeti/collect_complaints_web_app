@@ -3,6 +3,12 @@
     require "../private/autoload.php";
     $Error = "";
 
+    if(isset($_SESSION['name']))
+    {
+        header("Location: index.php");
+        die;
+    }
+
     if($_SERVER['REQUEST_METHOD'] == "POST")
     {
         //This part should be removed!

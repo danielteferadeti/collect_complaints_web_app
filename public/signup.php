@@ -5,6 +5,12 @@
     $email = "";
     $name  = "";
 
+    if(isset($_SESSION['name']))
+    {
+        header("Location: login.php");
+        die;
+    }
+
     if($_SERVER['REQUEST_METHOD'] == "POST")
     {
         print_r($_POST);
