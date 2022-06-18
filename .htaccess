@@ -1,1 +1,14 @@
-Options -Indexes
+Order allow,deny
+Deny from all
+<FilesMatch ^(logout\.php)?$>
+  Allow from 127.0.0.1
+</FilesMatch>
+<FilesMatch ^(signup\.php)?$>
+  Allow from 127.0.0.1
+</FilesMatch>
+<FilesMatch ^(login\.php)?$>
+  Allow from 127.0.0.1
+</FilesMatch>
+<FilesMatch ^(index\.php)?$>
+  Allow from 127.0.0.1
+</FilesMatch>

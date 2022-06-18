@@ -9,7 +9,7 @@
         die;
     }
 
-    if($_SERVER['REQUEST_METHOD'] == "POST")
+    if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && isset($_POST['token']) && $_SESSION['token'] == $_POST['token'])
     {
         //This part should be removed!
         print_r($_POST);
@@ -48,6 +48,9 @@
 
         $Error = "Wrong Email or Password!";
     }
+
+    //This generates a rundom token to be checked with the one in the form!
+    $_SESSION['token'] = get_random_string(60);
 ?>
 
 <!DOCTYPE html>
@@ -91,7 +94,10 @@
             <div id="title">Login</div>
             <input id="textbox" type="email" name="email" required><br><br>
             <input id="textbox" type="password" name="password" required><br><br>
-            
+
+            <!-- FOR CSRF TOKEN -->
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+
             <input type="submit" value="Login">
 
             <div style="float:right">

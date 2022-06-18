@@ -5,9 +5,11 @@
 
     //only set the variable name if they are logged in!
     $name = "";
+    $url_address = "";
     if(isset($_SESSION['name']))
     {
         $name = $_SESSION['name'];
+        $url_address = $_SESSION['url_address'];
     }
 ?>
 
@@ -33,9 +35,9 @@
             <!-- Use the following: if the data is prone to being tempered with
                 when storing the file.
 
-                This is HTML ESCAPING
+                This is HTML : Javascript won't run here!
             -->
-            <!--- <?= htmlspecialchars($user_data->name)?>  --->
+            <?= htmlspecialchars($user_data->url_address)?>
 
         </div>
 

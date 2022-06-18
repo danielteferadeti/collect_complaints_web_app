@@ -11,7 +11,7 @@
         die;
     }
 
-    if($_SERVER['REQUEST_METHOD'] == "POST")
+    if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['token']) && $_SESSION['token'] == $_POST['token'])
     {
         print_r($_POST);
 
@@ -127,7 +127,10 @@
             <input id="textbox" type="text" name="full_name" value="<?=$name?>" required><br><br>
             <input id="textbox" type="email" name="email" value="<?=$email?>" required><br><br>
             <input id="textbox" type="password" name="password" required><br><br>
-            
+
+            <!-- FOR CSRF TOKEN -->
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+
             <input type="submit" value="Signup">
             <div style="float:right">
                 <a href="login.php">Login instead</a>
