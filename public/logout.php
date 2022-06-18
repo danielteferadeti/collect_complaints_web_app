@@ -1,7 +1,6 @@
 <?php
     require "../private/autoload.php";
 
-
     if(isset($_SESSION['email']))
     {
         unset($_SESSION['email']);
