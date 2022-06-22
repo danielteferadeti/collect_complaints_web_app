@@ -13,10 +13,11 @@
 
     if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['token']) && $_SESSION['token'] == $_POST['token'])
     {
-        print_r($_POST);
-
         //validating user input by white listing: regural expression 
         $name = $_POST['full_name'];
+        //This should be removed //to avoid XSS attack 
+        //print_r(htmlspecialchars($name));
+
         if (!preg_match("/^[a-zA-Z ]+$/", $name))
         {
             $Error = "Please enter a valid Name!";
@@ -83,6 +84,8 @@
             die;
         }
     }
+    //This generates a random token to be checked with the one in the form!
+    $_SESSION['token'] = get_random_string(60);
 ?>
 
 <!DOCTYPE html>

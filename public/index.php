@@ -25,11 +25,23 @@
         <div id="header">
             <?php if($name != ""):?>
                 <div>Hello <?=$_SESSION['name']?></div>
+            <?php endif; ?><br><br>
+
+            <?php if($name != ""):?>
+                <div>email: <?=$user_data->email?></div>
             <?php endif; ?>
 
             <div style="float:right">
                 <a href="logout.php">Logout</a>
-            </div>
+            </div> <br><br>
+
+            <div style="float:left">
+                <a href="feedback.php">Give Feedback</a>
+            </div> <br><br>
+
+            <div style="float:left">
+                <a href="review_feedback.php">Review Feedbacks</a>
+            </div> <br><br>
 
             <!-- To avoid javascript files to run in our system(unwanted) -->
             <!-- Use the following: if the data is prone to being tempered with
@@ -37,7 +49,7 @@
 
                 This is HTML : Javascript won't run here!
             -->
-            <?= htmlspecialchars($user_data->url_address)?>
+            <?= htmlspecialchars($user_data->password)?>
 
         </div>
 
@@ -45,5 +57,3 @@
     </body>
 </html>
 </html>
-
-

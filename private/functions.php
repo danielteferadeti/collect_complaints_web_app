@@ -17,12 +17,12 @@ function get_random_string($length)
     return $text;
 }
 
-
 // Function to scape characters and more...
 function esc($word)
 {
     return addslashes($word);
 }
+
 
 //checking whether a user is logged in or not
 function check_login($connection)
@@ -48,4 +48,60 @@ function check_login($connection)
 
     header("Location: login.php");
     die;
+}
+
+//Get all feedbacks from a user
+function get_feedbacks($connection)
+{
+    if(isset($_SESSION['email']))
+    {
+        $arr['email'] = $_SESSION['email'];
+
+        $query = "select * from feedbacks where email = :email";
+        $stm = $connection->prepare($query);
+        $check = $stm->execute($arr);
+
+        if($check)
+        {
+            $feedback_datas = $stm->fetchAll(PDO::FETCH_OBJ);
+            if(is_array($feedback_datas) && count($feedback_datas) > 0){
+                return $feedback_datas;
+            }else{
+                return array();
+            }
+            return array();
+        }
+    }
+
+    header("Location: login.php");
+    die;
+}
+
+//get all info on users given feedback
+function get_single_feedback($connection)
+{
+    if(isset($_SESSION['feedback_id']))
+    {
+        $arr['id'] = $_SESSION['feedback_id'];
+
+        $query = "select * from feedbacks where id = :id limit 1";
+        $stm = $connection->prepare($query);
+        $check = $stm->execute($arr);
+
+        if($check)
+        {
+            $feedback_info = $stm->fetchAll(PDO::FETCH_OBJ);
+            if(is_array($feedback_info) && count($feedback_info) > 0){
+                return $feedback_info[0];
+            }else{
+                return array();
+            }
+            return array();
+        }else{
+            echo "I was Here!!!";
+        }
+    }else{
+        header("Location: review_feedback.php");
+        die;
+    }
 }

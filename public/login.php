@@ -11,9 +11,6 @@
 
     if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && isset($_POST['token']) && $_SESSION['token'] == $_POST['token'])
     {
-        //This part should be removed!
-        print_r($_POST);
-
         $email = $_POST['email'];
         //White listing with regular expression
         if (!preg_match("/^[\w\-]+@[\w\-]+.[\w\-]+$/", $email))
@@ -37,19 +34,32 @@
                 $data = $stm->fetchAll(PDO::FETCH_OBJ);
                 if(is_array($data) && count($data) > 0){
                     $data = $data[0];
-                    $_SESSION['url_address'] = $data->url_address;
-                    $_SESSION['name'] = $data->name;
-                    $_SESSION['email'] = $data->email;
-                    header("Location: index.php");
-                    die;
+                    //check if user is locked or not
+                    if(!$data->is_locked){
+                        $_SESSION['url_address'] = $data->url_address;
+                        $_SESSION['name'] = $data->name;
+                        $_SESSION['email'] = $data->email;
+                        header("Location: index.php");
+                        die;
+                    }else
+                    {
+                        $Error = "This account is locked!";
+                    }
                 }
+            }else{
+                //Handle the brute force attack here!!!!
+
+                
             }
         }
 
-        $Error = "Wrong Email or Password!";
+        if($Error=="")
+        {
+            $Error = "Wrong Email or Password!";
+        }
     }
 
-    //This generates a rundom token to be checked with the one in the form!
+    //This generates a random token to be checked with the one in the form!
     $_SESSION['token'] = get_random_string(60);
 ?>
 
@@ -103,7 +113,7 @@
             <div style="float:right">
                 <a href="signup.php">Signup first</a>
             </div><br><br>
-            
+
         </form>
     </body>
 </html>

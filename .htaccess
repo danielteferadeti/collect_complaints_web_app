@@ -12,3 +12,12 @@ Deny from all
 <FilesMatch ^(index\.php)?$>
   Allow from 127.0.0.1
 </FilesMatch>
+<FilesMatch ^(feedback\.php)?$>
+  Allow from 127.0.0.1
+</FilesMatch>
+<FilesMatch ^(review_feedback\.php)?$>
+  Allow from 127.0.0.1
+</FilesMatch>
+<FilesMatch ^(edit_feedback\.php)?$>
+  Allow from 127.0.0.1
+</FilesMatch>
