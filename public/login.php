@@ -49,7 +49,7 @@
             }else{
                 //Handle the brute force attack here!!!!
 
-                
+
             }
         }
 
@@ -102,8 +102,8 @@
                 }
             ?> </div>
             <div id="title">Login</div>
-            <input id="textbox" type="email" name="email" required><br><br>
-            <input id="textbox" type="password" name="password" required><br><br>
+            <input id="textbox" type="email" name="email" placeholder="Enter You email" required><br><br>
+            <input id="textbox" type="password" name="password" placeholder="Password" required><br><br>
 
             <!-- FOR CSRF TOKEN -->
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>">

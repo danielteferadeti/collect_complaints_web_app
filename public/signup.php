@@ -127,9 +127,9 @@
                 }
             ?> </div>
             <div id="title">Signup</div>
-            <input id="textbox" type="text" name="full_name" value="<?=$name?>" required><br><br>
-            <input id="textbox" type="email" name="email" value="<?=$email?>" required><br><br>
-            <input id="textbox" type="password" name="password" required><br><br>
+            <input id="textbox" type="text" name="full_name" placeholder="Full Name" value="<?=$name?>" required><br><br>
+            <input id="textbox" type="email" name="email" placeholder="Email" value="<?=$email?>" required><br><br>
+            <input id="textbox" type="password" name="password" placeholder="Password" required><br><br>
 
             <!-- FOR CSRF TOKEN -->
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
