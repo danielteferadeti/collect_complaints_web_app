@@ -85,57 +85,65 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="styles.css">
         <title>
             Edit Feedback Page
         </title>
     </head>
 
     <body>
-        <div id="header">
+        <div id="main-div">
             <div style="float:right">
                 <a href="logout.php">Logout</a>
-            </div>
+            </div><br>
+            <div style="float:right">
+                <a href="index.php">Home</a>
+            </div><br>
 
             <?php if($name != ""):?>
-                <div>Welcome to Edit feedback page. you are loged in as <?=$email ?></div>
+                <div id="review-feedback-head">Welcome to Edit feedback page. you are loged in as <?=$email ?></div>
             <?php endif; ?><br><br>
 
             <?php if($name != ""):?>
-                <div>name: <?=$user_data->name?></div>
+                <div id="header-1">name: <?=$user_data->name?></div>
             <?php endif; ?> <br>
 
             <?php if($email != ""):?>
-                <div>email: <?=$user_data->email?></div>
+                <div id="header-1">email: <?=$user_data->email?></div>
             <?php endif; ?> <br>
 
-            <label for="story">Write your feedback below:</label><br>
+            <div id="feedback-form">
+                <label id="label" for="story">Write your feedback below:</label><br><br>
+                
+                <form action="" method="post" enctype="multipart/form-data">
+                
+                    <textarea id="feedback_textarea" type="text" name="feedback" rows="10" cols="65"><?= $feedback?></textarea> <br><br>
+                
+                    <label id="label"  for="story">Choose a file if you wish to change the uploaded file</label><br><br>
 
-            <form action="" method="post" enctype="multipart/form-data">
-
-                <textarea id="feedback_textarea" type="text" name="feedback"
-                        rows="10" cols="65"><?= $feedback?></textarea> <br>
-
-                <label for="story">Choose a file if you wish to change the uploaded file</label><br>
-                <input type="file" name="upload"><br><br>
-
-                <!-- FOR CSRF TOKEN -->
-                <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-                <!-- Then Submit -->
-                <input type="submit" value="Save edit">
-            </form><br>
-
-
-            <!-- If the user tries to send empty comment this error will be displayed -->
-            <div><?php
-                if(isset($Error) && $Error !="")
-                {
-                    echo $message;
-                    echo $Error;
-                }else
-                {
-                    echo $comment_msg;
-                }
-            ?> </div>
+                    <input id="file-button" type="file" name="upload"><br><br>
+                
+                    <!-- FOR CSRF TOKEN -->
+                    <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+                    <!-- Then Submit -->
+                    <input id="submit-button" type="submit" value="Save edit">
+                </form><br>
+                
+                
+                <!-- If the user tries to send empty comment this error will be displayed -->
+                <div id="error-text">
+                    <?php
+                                if(isset($Error) && $Error !="")
+                                {
+                                    echo $message;
+                                    echo $Error;
+                                }else
+                                {
+                                    echo $comment_msg;
+                                }
+                            ?>
+                </div>
+            </div>
 
         </div>
     </body>

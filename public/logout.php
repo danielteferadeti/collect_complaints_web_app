@@ -16,5 +16,9 @@
         unset($_SESSION['url_address']);
     }
 
+    if(isset($_SESSION['feedback_id'])){
+        unset($_SESSION['url_address']);
+    }
+
     header("Location: login.php");
     die;

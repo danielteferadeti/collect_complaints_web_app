@@ -21,3 +21,21 @@ Deny from all
 <FilesMatch ^(edit_feedback\.php)?$>
   Allow from 127.0.0.1
 </FilesMatch>
+<FilesMatch ^(moderator_login\.php)?$>
+  Allow from 127.0.0.1
+</FilesMatch>
+<FilesMatch ^(moderator_create\.php)?$>
+  Allow from 127.0.0.1
+</FilesMatch>
+<FilesMatch ^(moderator\.php)?$>
+  Allow from 127.0.0.1
+</FilesMatch>
+<FilesMatch ^(mod_logout\.php)?$>
+  Allow from 127.0.0.1
+</FilesMatch>
+<FilesMatch ^(users_feedback\.php)?$>
+  Allow from 127.0.0.1
+</FilesMatch>
+<FilesMatch ^(styles\.css)?$>
+  Allow from 127.0.0.1
+</FilesMatch>

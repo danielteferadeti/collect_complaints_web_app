@@ -13,9 +13,9 @@
 
     if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['token']) && $_SESSION['token'] == $_POST['token'])
     {
-        //validating user input by white listing: regural expression 
+        //validating user input by white listing: regural expression
         $name = $_POST['full_name'];
-        //This should be removed //to avoid XSS attack 
+        //This should be removed //to avoid XSS attack
         //print_r(htmlspecialchars($name));
 
         if (!preg_match("/^[a-zA-Z ]+$/", $name))
@@ -34,6 +34,10 @@
         }
         //Sanitization for Password
         $password = esc($_POST['password']);
+
+        //Salting and Hashing the password
+        $salt = get_random_string(60);
+        $hashed_pass = password_hash($salt.$password, PASSWORD_DEFAULT);
 
         //to make records different
         $date = date("Y-m-d H:i:s");
@@ -64,21 +68,14 @@
 
             $arr['url_address'] = $url_address;
             $arr['name'] = $name;
-            $arr['password'] = $password;
+            $arr['password'] = $hashed_pass;
             $arr['email'] = $email;
             $arr['date'] = $date;
+            $arr['salt'] = $salt;
 
-            $query = "insert into users (url_address,name,password, email, date) values (:url_address,:name,:password,:email,:date)";
+            $query = "insert into users (url_address,name,password, email, date, salt) values (:url_address,:name,:password,:email,:date,:salt)";
             $stm = $connection->prepare($query);
             $stm->execute($arr);
-
-            // ----------- // ------------ // -----------
-            // --- without prepared statement
-            // -- before using the following code uncomment the connection to 
-            // database at database.php page and comment the PDO section
-
-            // $query = "insert into users (url_address,name,password, email, date) values ('$url_address','$name','$password', '$email', '$date')";
-            // mysqli_query($connection, $query);
 
             header("Location: login.php");
             die;
@@ -91,55 +88,45 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="styles.css">
         <title>
             Signup
         </title>
     </head>
 
     <body style="font-family: verdana">
-        <style type="text/css">
-            form{
-                margin: auto;
-                border: solid thin #aaa;
-                padding: 6px;
-                max-width: 200px;
-            }
 
-            #title{
-                background-color: #39b799;
-                padding: 1em;
-                text-align: center;
-                color: white;
-            }
-
-            #textbox{
-                border: solid thin #aaa;
-                margin-top: 6px;
-                width: 98%;
-            }
-        </style>
-
-        <form method="post">
-            <div><?php
-                if(isset($Error) && $Error !="")
-                {
-                    echo $Error;
-                }
-            ?> </div>
-            <div id="title">Signup</div>
-            <input id="textbox" type="text" name="full_name" placeholder="Full Name" value="<?=$name?>" required><br><br>
-            <input id="textbox" type="email" name="email" placeholder="Email" value="<?=$email?>" required><br><br>
-            <input id="textbox" type="password" name="password" placeholder="Password" required><br><br>
-
-            <!-- FOR CSRF TOKEN -->
-            <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-
-            <input type="submit" value="Signup">
-            <div style="float:right">
-                <a href="login.php">Login instead</a>
-            </div><br><br>
+        <div id="main-div">
+            <form id="form" method="post">
+                <div id="title">Signup</div>
+                <br>
+                <input id="textbox" type="text" name="full_name" placeholder="Full Name" value="<?=$name?>" required><br><br>
+                <input id="textbox" type="email" name="email" placeholder="Email" value="<?=$email?>" required><br><br>
+                <input id="textbox" type="password" name="password" placeholder="Password" required><br><br>
             
-        </form>
+                <!-- FOR CSRF TOKEN -->
+                <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+            
+                <div id="error-text">
+                    <?php
+                        if(isset($Error) && $Error !="")
+                        {
+                            echo $Error;
+                        }
+                    ?>
+                </div>
+            
+                <br>
+            
+                <input id="submit-button" type="submit" value="Signup">
+            
+                <br><br>
+                <div style="float:left">
+                    <a href="login.php">Login instead</a>
+                </div><br><br>
+            
+            </form>
+        </div>
     </body>
 </html>
 </html>

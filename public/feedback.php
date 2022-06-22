@@ -44,12 +44,11 @@
                 $fileType = $_FILES['upload']['type'];
                 $ext = end(explode('.', $fileName));
 
-                $newFileName = md5(time() . $fileName) . '.' . $ext;
+                $newFileName = md5(time() . esc($fileName)) . '.' . $ext;
 
                 //Now to the uploading part
                 if (in_array($ext, $exts_allowed))
                 {
-                    echo "I was HERE";
                     $uploadFileDir = '../private/uploaded_files/';
                     $dest_path = $uploadFileDir . $newFileName;
 
@@ -82,8 +81,6 @@
                 $check = $stm->execute($arr);
 
                 $comment_msg = "Your Compliant is successfully recorded!";
-                // header("Location: feedback.php");
-                // die;
             }
         }
     }
@@ -94,59 +91,68 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>
-            Feedback Page
-        </title>
-    </head>
 
-    <body>
-        <div id="header">
-            <div style="float:right">
-                <a href="logout.php">Logout</a>
-            </div>
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <title>
+        Feedback Page
+    </title>
+</head>
 
-            <?php if($name != ""):?>
-                <div>Welcome to feedback page. you are loged in as <?=$email ?></div>
-            <?php endif; ?><br><br>
+<body>
+    <div id="main-div">
+        <div style="float:right">
+            <a href="logout.php">Logout</a>
+        </div><br>
+        <div style="float:right">
+            <a href="index.php">Home</a>
+        </div><br>
 
-            <?php if($name != ""):?>
-                <div>name: <?=$user_data->name?></div>
-            <?php endif; ?> <br>
+        <?php if ($name != "") : ?>
+            <div id="review-feedback-head">Welcome to feedback page. You are logged in as <?= $email ?></div>
+        <?php endif; ?><br><br>
 
-            <?php if($email != ""):?>
-                <div>email: <?=$user_data->email?></div>
-            <?php endif; ?> <br>
+        <?php if ($name != "") : ?>
+            <div id="header-1">name: <?= $user_data->name ?></div>
+        <?php endif; ?> <br>
 
-            <label for="story">Write your feedback below:</label><br>
+        <?php if ($email != "") : ?>
+            <div id="header-1">email: <?= $user_data->email ?></div>
+        <?php endif; ?> <br>
 
+        <div id="feedback-form">
+            <label id="label" for="story">Write your feedback below:</label><br><br>
+            
             <form action="" method="post" enctype="multipart/form-data">
-
-                <textarea id="feedback_textarea" type="text" name="feedback"
-                        rows="10" cols="65"></textarea> <br>
-
+            
+                <textarea id="feedback_textarea" type="text" name="feedback" rows="10" cols="65"></textarea> <br>
+            
                 <!-- FOR CSRF TOKEN -->
-                <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-
-                <input type="file" name="upload"><br><br>
-
-                <input type="submit" value="Submit Feedback">
+                <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>">
+                <br>
+            
+                <input id="file-button" type="file" name="upload"><br><br>
+            
+                <input id="submit-button" type="submit" value="Submit Feedback">
             </form><br>
-
-
+            
+            
             <!-- If the user tries to send empty comment this error will be displayed -->
-            <div><?php
-                if(isset($Error) && $Error !="")
-                {
-                    echo $message;
-                    echo $Error;
-                }else
-                {
-                    echo $comment_msg;
-                }
-            ?> </div>
-
+            <div id="error-text">
+                <?php
+                            if (isset($Error) && $Error != "") {
+                                echo $message;
+                                echo $Error;
+                            } else {
+                                echo $comment_msg;
+                            }
+                            ?>
+            </div>
         </div>
-    </body>
+
+    </div>
+</body>
+
 </html>
+
 </html>

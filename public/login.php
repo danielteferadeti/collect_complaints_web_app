@@ -22,10 +22,9 @@
 
         if($Error == "")
         {
-            $arr['password'] = $password;
             $arr['email'] = $email;
 
-            $query = "select * from users where email = :email && password = :password limit 1";
+            $query = "select * from users where email = :email limit 1";
             $stm = $connection->prepare($query);
             $check = $stm->execute($arr);
 
@@ -36,11 +35,18 @@
                     $data = $data[0];
                     //check if user is locked or not
                     if(!$data->is_locked){
-                        $_SESSION['url_address'] = $data->url_address;
-                        $_SESSION['name'] = $data->name;
-                        $_SESSION['email'] = $data->email;
-                        header("Location: index.php");
-                        die;
+                        $db_password = $data->password;
+                        $db_salt = $data->salt;
+                        //Verify the user here
+                        $user_pass_with_salt = $db_salt.$password;
+                        if (password_verify($user_pass_with_salt, $db_password))
+                        {
+                            $_SESSION['url_address'] = $data->url_address;
+                            $_SESSION['name'] = $data->name;
+                            $_SESSION['email'] = $data->email;
+                            header("Location: index.php");
+                            die;
+                        }
                     }else
                     {
                         $Error = "This account is locked!";
@@ -48,8 +54,7 @@
                 }
             }else{
                 //Handle the brute force attack here!!!!
-
-
+                $Error = "Wrong Email or Password!";
             }
         }
 
@@ -64,57 +69,48 @@
 ?>
 
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>
-            Login
-        </title>
-    </head>
+<html lang="en">
 
-    <body style="font-family: verdana">
-        <style type="text/css">
-            form{
-                margin: auto;
-                border: solid thin #aaa;
-                padding: 6px;
-                max-width: 200px;
-            }
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <title>
+        Login
+    </title>
+</head>
 
-            #title{
-                background-color: #39b799;
-                padding: 1em;
-                text-align: center;
-                color: white;
-            }
-
-            #textbox{
-                border: solid thin #aaa;
-                margin-top: 6px;
-                width: 98%;
-            }
-        </style>
-
-        <form method="post">
-            <div><?php
+<body style="font-family: verdana">
+    <div id="main-div">
+        <form id="form" method="post">
+        
+            <div id="title">LOGIN</div>
+            <br>
+            <input id="textbox" type="email" name="email" placeholder="Enter You email" required><br><br>
+            <input id="textbox" type="password" name="password" placeholder="Password" required><br><br>
+        
+            <!-- FOR CSRF TOKEN -->
+            <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>">
+        
+            <div id="error-text"><?php
                 if(isset($Error) && $Error !="")
                 {
                     echo $Error;
                 }
             ?> </div>
-            <div id="title">Login</div>
-            <input id="textbox" type="email" name="email" placeholder="Enter You email" required><br><br>
-            <input id="textbox" type="password" name="password" placeholder="Password" required><br><br>
 
-            <!-- FOR CSRF TOKEN -->
-            <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-
-            <input type="submit" value="Login">
-
-            <div style="float:right">
+            <br>
+        
+            <input id="submit-button" type="submit" value="Login">
+        
+            <br><br>
+        
+            <div style="float:left">
                 <a href="signup.php">Signup first</a>
             </div><br><br>
-
+        
         </form>
-    </body>
+    </div>
+</body>
+
 </html>
+
 </html>
