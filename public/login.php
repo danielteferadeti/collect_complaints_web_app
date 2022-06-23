@@ -89,7 +89,6 @@
         <form id="form" method="post">
         
             <div id="title">LOGIN</div>
-            <br>
             <input id="textbox1" type="text" name="honeypot" class="hidden" value=""><br><br>
             <input id="textbox" type="email" name="email" placeholder="Enter You email" required><br><br>
             <input id="textbox" type="password" name="password" placeholder="Password" required><br><br>
