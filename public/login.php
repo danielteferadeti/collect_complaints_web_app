@@ -3,6 +3,12 @@
     require "../private/autoload.php";
     $Error = "";
 
+    //for anti-automation as well
+    if(!empty( $_POST['honeypot']))
+    {
+        echo "You just got basted!!!";
+        die;
+    }
     if(isset($_SESSION['name']))
     {
         header("Location: index.php");
@@ -84,6 +90,7 @@
         
             <div id="title">LOGIN</div>
             <br>
+            <input id="textbox1" type="text" name="honeypot" class="hidden" value=""><br><br>
             <input id="textbox" type="email" name="email" placeholder="Enter You email" required><br><br>
             <input id="textbox" type="password" name="password" placeholder="Password" required><br><br>
         
