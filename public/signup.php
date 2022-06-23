@@ -34,6 +34,17 @@
         }
         //Sanitization for Password
         $password = esc($_POST['password']);
+        $c_password = esc($_POST['c_password']);
+
+        if(strlen($password) < 4)
+        {
+            $Error = "Password should be more than 4 characters";
+        }
+
+        if($password != $c_password)
+        {
+            $Error = "Password Doesn't match!";
+        }
 
         //Salting and Hashing the password
         $salt = get_random_string(60);
@@ -103,6 +114,7 @@
                 <input id="textbox" type="text" name="full_name" placeholder="Full Name" value="<?=$name?>" required><br><br>
                 <input id="textbox" type="email" name="email" placeholder="Email" value="<?=$email?>" required><br><br>
                 <input id="textbox" type="password" name="password" placeholder="Password" required><br><br>
+                <input id="textbox" type="password" name="c_password" placeholder="Confirm Password" required><br><br>
             
                 <!-- FOR CSRF TOKEN -->
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
